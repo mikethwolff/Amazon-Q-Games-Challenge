@@ -31,11 +31,11 @@ All sprite images and background assets were created using ChatGPT (DALL·E imag
   <img src="./spritesheets/alien_game_spritesheet.png" width=45% height=45% />
 </p>
 <p align="center">
-  <img src="./spritesheets/astronaut_spritesheet.png" width=45% height=45% />
-  <img src="./spritesheets/alien1_spritesheet.png" width=45% height=45% />
-  <img src="./spritesheets/alien2_spritesheet.png" width=45% height=45% />
-  <img src="./spritesheets/alien3_spritesheet.png" width=45% height=45% />
-  <img src="./spritesheets/space_background.png" width=45% height=45% />
+  <img src="./spritesheets/astronaut_spritesheet.png" />
+  <img src="./spritesheets/alien1_spritesheet.png" />
+  <img src="./spritesheets/alien2_spritesheet.png" />
+  <img src="./spritesheets/alien3_spritesheet.png" />
+  <img src="./spritesheets/space_background.png" />
 </p>
 
 ## The Result
