@@ -15,7 +15,7 @@ I prompted Amazon Q with the following request:
 Within minutes, Amazon Q generated a functional browser-based game — basic, pixel-style, but fully playable and built with clean JavaScript.
 
 <p align="center">
-  <img src="./screenshots/alien_game_0.jpeg" width=45% height=45% />
+  <img src="./screenshots/alien_game_0.jpeg" />
 </p>
 
 ## Iterations with Amazon Q
@@ -46,7 +46,7 @@ All sprite images and background assets were created using ChatGPT (DALL·E imag
 A simple yet fun Frogger-style game with a space theme — built and iterated in under an hour using Amazon Q.
 
 <p align="center">
-  <img src="./screenshots/alien_game_1.jpeg" width=45% height=45% />
+  <img src="./screenshots/alien_game_1.jpeg" />
 </p>
 
 ## Takeaways
