@@ -14,6 +14,10 @@ I prompted Amazon Q with the following request:
 
 Within minutes, Amazon Q generated a functional browser-based game — basic, pixel-style, but fully playable and built with clean JavaScript.
 
+<p align="center">
+  <img src="./screenshots/alien_game_0.jpeg" width=45% height=45% />
+</p>
+
 ## Iterations with Amazon Q
 From there, I made several improvements by continuing to prompt Amazon Q:
 
@@ -40,6 +44,10 @@ All sprite images and background assets were created using ChatGPT (DALL·E imag
 
 ## The Result
 A simple yet fun Frogger-style game with a space theme — built and iterated in under an hour using Amazon Q.
+
+<p align="center">
+  <img src="./screenshots/alien_game_1.jpeg" width=45% height=45% />
+</p>
 
 ## Takeaways
 Amazon Q keeps you in flow — the back-and-forth iteration felt natural and fast.
