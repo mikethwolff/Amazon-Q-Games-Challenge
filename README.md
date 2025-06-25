@@ -50,22 +50,20 @@ A simple yet fun Frogger-style game with a space theme — built and iterated in
 </p>
 
 ## Takeaways
-Amazon Q keeps you in flow — the back-and-forth iteration felt natural and fast.
 
-It’s not a silver bullet — some programming knowledge is still necessary, especially for debugging or refining logic.
+- Amazon Q keeps you in flow — the back-and-forth iteration felt natural and fast.
 
-But it is a powerful co-creator, especially for prototyping and learning.
+- It’s not a silver bullet — some programming knowledge is still necessary, especially for debugging or refining logic.
+
+- But it is a powerful co-creator, especially for prototyping and learning.
 
 ## What's Included
-index.html – Main game canvas and UI
 
-game.js – Game logic, sprite handling, and movement
-
-assets/ – Spritesheet and background images (generated via ChatGPT)
-
-README.md – This file
+- index.html – Main game canvas, UI, Game logic, sprite handling, and movement
+- spritesheets/ – Spritesheet and background images (generated via ChatGPT)
+- README.md – This file
 
 ## Try the Challenge Yourself
-You can still enter the challenge here:
-## AWS Build Games Challenge
+You can enter the challenge here, until June 30th:
+**[AWS Build Games Challenge](https://community.aws/content/2y6egGcPAGQs8EwtQUM9KAONojz/build-games-challenge-build-classics-with-amazon-q-developer-cli?trk=b3ed9c83-eb20-4f68-b5b4-ffdc878e85c6&sc_channel=em&bb=237784)**
 
