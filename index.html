@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Crossing</title>
+    <style>
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+        .hud {
+            width: 600px;
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 24px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        }
+        canvas {
+            border: 2px solid white;
+            display: block;
+        }
+        body {
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .popup {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #ffffff;
+            color: white;
+            text-align: center;
+            z-index: 1000;
+            min-width: 300px;
+        }
+        .popup h2 {
+            color: #ff0000;
+            margin-top: 0;
+        }
+        .popup button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        .popup button:hover {
+            background: #45a049;
+        }
+        .lives-display {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .life-icon {
+            width: 30px;
+            height: 30px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="hud">
+            <div id="score">Score: 0</div>
+            <div id="lives">Lives: 3</div>
+            <div id="timer">Time: 60</div>
+        </div>
+        <canvas id="gameCanvas" width="600" height="400" aria-label="Space Crossing Game" role="img"></canvas>
+        <div class="popup" id="collisionPopup">
+            <h2>Collision!</h2>
+            <p>Oops! You got hit by an alien.</p>
+            <div class="lives-display" id="livesDisplay"></div>
+            <p id="livesText"></p>
+            <button id="tryAgainButton">Try Again</button>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const livesElement = document.getElementById('lives');
+        const timerElement = document.getElementById('timer');
+        const popup = document.getElementById('collisionPopup');
+        const tryAgainButton = document.getElementById('tryAgainButton');
+        const livesDisplay = document.getElementById('livesDisplay');
+
+        // Game state
+        let score = 0;
+        let lives = 3;
+        let gameOver = false;
+        let timeLeft = 60;
+        let timerInterval;
+
+        // Background image
+        const background = new Image();
+        background.src = 'spritesheets/space_background.png';
+
+        // Sprite class
+        class Sprite {
+            constructor(imageSource, frameWidth, frameHeight, frameCount, animationSpeed = 0.15) {
+                this.loaded = false;
+                this.image = new Image();
+                this.image.onload = () => {
+                    this.loaded = true;
+                };
+                this.image.src = imageSource;
+                this.frameWidth = frameWidth;
+                this.frameHeight = frameHeight;
+                this.frameCount = frameCount;
+                this.currentFrame = 0;
+                this.animationSpeed = animationSpeed;
+                this.animationCounter = 0;
+            }
+
+            animate() {
+                this.animationCounter += this.animationSpeed;
+                if (this.animationCounter >= 1) {
+                    this.currentFrame = (this.currentFrame + 1) % this.frameCount;
+                    this.animationCounter = 0;
+                }
+            }
+
+            draw(ctx, x, y, width, height, direction = 1) {
+                if (!this.loaded) {
+                    if (this === astronautSprite) {
+                        ctx.fillStyle = '#00ff00';
+                        ctx.fillRect(x, y, width, height);
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(x + 10, y + 5, 20, 15);
+                    } else {
+                        let alienColor;
+                        if (this === alienSprite1) alienColor = '#ff0000';
+                        else if (this === alienSprite2) alienColor = '#ff00ff';
+                        else if (this === alienSprite3) alienColor = '#00ffff';
+                        
+                        ctx.fillStyle = alienColor;
+                        ctx.beginPath();
+                        ctx.ellipse(x + width/2, y + height/2, width/2, height/2, 0, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.arc(x + 15, y + 15, 5, 0, Math.PI * 2);
+                        ctx.arc(x + 25, y + 15, 5, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    return;
+                }
+
+                ctx.save();
+                if (direction === -1) {
+                    ctx.scale(-1, 1);
+                    x = -x - width;
+                }
+                ctx.drawImage(
+                    this.image,
+                    this.currentFrame * this.frameWidth,
+                    0,
+                    this.frameWidth,
+                    this.frameHeight,
+                    x,
+                    y,
+                    width,
+                    height
+                );
+                ctx.restore();
+            }
+        }
+
+        // Initialize sprites
+        const astronautSprite = new Sprite('spritesheets/astronaut_spritesheet.png', 32, 32, 4);
+        const alienSprite1 = new Sprite('spritesheets/alien1_spritesheet.png', 32, 32, 8, 0.2);
+        const alienSprite2 = new Sprite('spritesheets/alien2_spritesheet.png', 32, 32, 8, 0.2);
+        const alienSprite3 = new Sprite('spritesheets/alien3_spritesheet.png', 32, 32, 8, 0.2);
+
+        // Game objects
+        const astronaut = {
+            x: canvas.width / 2,
+            y: canvas.height - 50,
+            width: 40,
+            height: 40,
+            speed: 30,
+            moving: false
+        };
+
+        const aliens = [];
+        const lanes = 5;
+        const aliensPerLane = 3;
+
+        // Initialize aliens
+        for (let lane = 0; lane < lanes; lane++) {
+            for (let i = 0; i < aliensPerLane; i++) {
+                aliens.push({
+                    x: i * (canvas.width / aliensPerLane),
+                    y: 50 + lane * 60,
+                    width: 40,
+                    height: 40,
+                    speed: 2 + Math.random() * 2 * (lane % 2 ? 1 : -1),
+                    type: (lane + i) % 3
+                });
+            }
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 60;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = `Time: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    gameOver = true;
+                    clearInterval(timerInterval);
+                }
+            }, 1000);
+        }
+
+        function drawAstronaut() {
+            astronautSprite.draw(ctx, astronaut.x, astronaut.y, astronaut.width, astronaut.height);
+            if (astronaut.moving) {
+                astronautSprite.animate();
+            }
+        }
+
+        function drawAlien(alien) {
+            let sprite;
+            switch(alien.type) {
+                case 0: sprite = alienSprite1; break;
+                case 1: sprite = alienSprite2; break;
+                case 2: sprite = alienSprite3; break;
+            }
+            
+            sprite.draw(
+                ctx, 
+                alien.x, 
+                alien.y, 
+                alien.width, 
+                alien.height, 
+                alien.speed < 0 ? -1 : 1
+            );
+            sprite.animate();
+        }
+
+        function updateHUD() {
+            scoreElement.textContent = `Score: ${score}`;
+            livesElement.textContent = `Lives: ${lives}`;
+        }
+
+        function handleCollision() {
+            lives--;
+            updateHUD();
+            
+            if (lives <= 0) {
+                gameOver = true;
+                clearInterval(timerInterval);
+                return;
+            }
+
+            popup.style.display = 'block';
+            
+            livesDisplay.innerHTML = '';
+            for (let i = 0; i < lives; i++) {
+                const lifeIcon = document.createElement('div');
+                lifeIcon.className = 'life-icon';
+                livesDisplay.appendChild(lifeIcon);
+            }
+            
+            document.getElementById('livesText').textContent = 
+                `You have ${lives} ${lives === 1 ? 'life' : 'lives'} remaining!`;
+        }
+
+        function update() {
+            if (gameOver) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '48px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2);
+                ctx.font = '24px Arial';
+                ctx.fillText(`Final Score: ${score}`, canvas.width/2, canvas.height/2 + 40);
+                ctx.fillText('Press Space to Restart', canvas.width/2, canvas.height/2 + 80);
+                return;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+            aliens.forEach(alien => {
+                alien.x += alien.speed;
+                if (alien.x > canvas.width) {
+                    alien.x = -alien.width;
+                } else if (alien.x < -alien.width) {
+                    alien.x = canvas.width;
+                }
+
+                if (!popup.style.display || popup.style.display === 'none') {
+                    if (astronaut.x < alien.x + alien.width * 0.8 &&
+                        astronaut.x + astronaut.width * 0.8 > alien.x &&
+                        astronaut.y < alien.y + alien.height * 0.8 &&
+                        astronaut.y + astronaut.height * 0.8 > alien.y) {
+                        handleCollision();
+                    }
+                }
+            });
+
+            aliens.forEach(drawAlien);
+            drawAstronaut();
+
+            if (astronaut.y <= 0) {
+                score += 100;
+                updateHUD();
+                astronaut.y = canvas.height - 50;
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        function resetGame() {
+            gameOver = false;
+            score = 0;
+            lives = 3;
+            astronaut.x = canvas.width / 2;
+            astronaut.y = canvas.height - 50;
+            popup.style.display = 'none';
+            updateHUD();
+            startTimer();
+            update();
+        }
+
+        tryAgainButton.addEventListener('click', () => {
+            popup.style.display = 'none';
+            astronaut.x = canvas.width / 2;
+            astronaut.y = canvas.height - 50;
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (gameOver && e.code === 'Space') {
+                resetGame();
+                return;
+            }
+
+            if (popup.style.display === 'block') {
+                return;
+            }
+
+            astronaut.moving = true;
+            switch(e.key) {
+                case 'ArrowUp':
+                    if (astronaut.y > 0) astronaut.y -= astronaut.speed;
+                    break;
+                case 'ArrowDown':
+                    if (astronaut.y < canvas.height - astronaut.height) {
+                        astronaut.y += astronaut.speed;
+                    }
+                    break;
+                case 'ArrowLeft':
+                    if (astronaut.x > 0) astronaut.x -= astronaut.speed;
+                    break;
+                case 'ArrowRight':
+                    if (astronaut.x < canvas.width - astronaut.width) {
+                        astronaut.x += astronaut.speed;
+                    }
+                    break;
+            }
+        });
+
+        document.addEventListener('keyup', () => {
+            astronaut.moving = false;
+        });
+
+        updateHUD();
+        startTimer();
+        update();
+    </script>
+</body>
+</html>
