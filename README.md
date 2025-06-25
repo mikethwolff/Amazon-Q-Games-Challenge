@@ -48,9 +48,6 @@ A simple yet fun Frogger-style game with a space theme — built and iterated in
 <p align="center">
   <img src="./screenshots/alien_game_1.jpeg" />
 </p>
-<p align="center">
-  <img src="./videos/AmazonQ_Game_s.mp4" />
-</p>
 
 ## Takeaways
 
@@ -64,6 +61,7 @@ A simple yet fun Frogger-style game with a space theme — built and iterated in
 
 - index.html – Main game canvas, UI, game logic, sprite handling, and movement
 - spritesheets/ – Spritesheet and background images (generated via ChatGPT)
+- videos/ - short recording of game
 - README.md – This file
 
 ## Try the Challenge Yourself
