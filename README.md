@@ -46,10 +46,10 @@ All sprite images and background assets were created using ChatGPT (DALL·E imag
 A simple yet fun Frogger-style game with a space theme — built and iterated in under an hour using Amazon Q.
 
 <p align="center">
-  <img src="./screenshots/alien_game_1.jpeg" />
+  [![Short Game Video](./screenshots/alien_game_1.jpeg)](./videos/AmazonQ_Game_s.mp4)
 </p>
 <p align="center">
-  <video controls="" width="800" height="500" muted="" loop="" autoplay="">
+<video controls="" width="800" height="500" muted="" loop]="" autoplay="">
   <source src="./videos/AmazonQ_Game_s.mp4" type="video/mp4">
   </video>
 </p>
