@@ -48,6 +48,9 @@ A simple yet fun Frogger-style game with a space theme — built and iterated in
 <p align="center">
   <img src="./screenshots/alien_game_1.jpeg" />
 </p>
+<p align="center">
+  <img src="./videos/AmazonQ_Game_s.mp4" />
+</p>
 
 ## Takeaways
 
