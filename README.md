@@ -15,7 +15,7 @@ I prompted Amazon Q with the following request:
 Within minutes, Amazon Q generated a functional browser-based game — basic, pixel-style, but fully playable and built with clean JavaScript.
 
 <p align="center">
-  <img src="./screenshots/alien_game_0.jpeg" />
+  <img src="./screenshots/alien_game_start.jpeg" />
 </p>
 
 ## Iterations with Amazon Q
