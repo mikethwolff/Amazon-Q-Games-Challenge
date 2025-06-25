@@ -59,11 +59,11 @@ A simple yet fun Frogger-style game with a space theme — built and iterated in
 
 ## What's Included
 
-- index.html – Main game canvas, UI, Game logic, sprite handling, and movement
+- index.html – Main game canvas, UI, game logic, sprite handling, and movement
 - spritesheets/ – Spritesheet and background images (generated via ChatGPT)
 - README.md – This file
 
 ## Try the Challenge Yourself
-You can enter the challenge here, until June 30th:
+You can enter the challenge here, until June 30:
 **[AWS Build Games Challenge](https://community.aws/content/2y6egGcPAGQs8EwtQUM9KAONojz/build-games-challenge-build-classics-with-amazon-q-developer-cli?trk=b3ed9c83-eb20-4f68-b5b4-ffdc878e85c6&sc_channel=em&bb=237784)**
 
